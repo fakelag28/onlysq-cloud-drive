@@ -120,18 +120,22 @@ pip install -e .
 
 ## Быстрый старт
 
-### Полная настройка одной командой
+### Пример полного сценария установки (Powershell)
 
 ```powershell
+winget install -e --id WinFsp.WinFsp
+pip install onlysq-drive
 onlysq-drive setup --mount O: --label "OnlySQ Cloud"
+onlysq-drive doctor
+Start-ScheduledTask -TaskName "OnlySQ Drive"
 ```
 
-После этого будет:
+После этого:
 
-* создан конфиг,
-* создан локальный индекс,
-* установлен пункт контекстного меню,
-* установлен автозапуск при входе в Windows.
+* появляется диск `O:`,
+* ставится автозапуск,
+* добавляется контекстное меню,
+* после следующего входа в Windows диск продолжает работать автоматически.
 
 ### Проверка
 
@@ -475,25 +479,6 @@ onlysq-drive purge --yes
 ```powershell
 pip uninstall onlysq-drive
 ```
-
----
-
-## Пример полного сценария установки (Powershell)
-
-```powershell
-winget install -e --id WinFsp.WinFsp
-pip install onlysq-drive
-onlysq-drive setup --mount O: --label "OnlySQ Cloud"
-onlysq-drive doctor
-Start-ScheduledTask -TaskName "OnlySQ Drive"
-```
-
-После этого:
-
-* появляется диск `O:`,
-* ставится автозапуск,
-* добавляется контекстное меню,
-* после следующего входа в Windows диск продолжает работать автоматически.
 
 ---
 
