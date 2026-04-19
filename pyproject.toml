@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "onlysq-drive"
-version = "1.0.0"
-description = "CLI&Drive is an extension for Windows systems that allows you to use OnlySQ Cloud as a Windows drive (for example `O:`) using WinFsp + winfspy"
+version = "1.1.1"
+description = "CLI tool and virtual filesystem that mounts OnlySQ Cloud as a Windows drive or Linux mountpoint"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 authors = [
   { name = "fakelag28", email = "fakelag712@gmail.com" }
 ]
@@ -16,12 +16,16 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
   "License :: OSI Approved :: MIT License",
   "Environment :: Console",
+  "Topic :: System :: Filesystems",
 ]
 dependencies = [
   "requests>=2.31,<3",
   "winfspy>=0.8.4,<0.9 ; platform_system == 'Windows'",
+  "pyfuse3>=3.2,<4 ; platform_system == 'Linux'",
+  "trio>=0.22 ; platform_system == 'Linux'",
 ]
 
 [project.urls]

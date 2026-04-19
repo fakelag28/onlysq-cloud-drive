@@ -1,14 +1,16 @@
-
 from __future__ import annotations
 
 import datetime as dt
+import platform
 import sys
 import traceback
 
+from .autostart import autostart_log_path
 from .config import AppConfig
 from .mount import run_mount
 from .paths import ensure_base_dirs
-from .autostart import autostart_log_path
+
+IS_WINDOWS = platform.system() == "Windows"
 
 
 def _redirect_stdio() -> None:
@@ -30,7 +32,8 @@ def main(argv: list[str] | None = None) -> int:
         except Exception:
             traceback.print_exc()
             raise
-    print("Usage: pythonw -m onlysq_drive.launcher mount-hidden")
+    launcher = "pythonw" if IS_WINDOWS else "python"
+    print(f"Usage: {launcher} -m onlysq_drive.launcher mount-hidden")
     return 2
 
 

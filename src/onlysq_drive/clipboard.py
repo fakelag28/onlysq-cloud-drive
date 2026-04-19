@@ -1,10 +1,24 @@
 from __future__ import annotations
 
-import ctypes
-from ctypes import wintypes
+import platform
+import shutil
+import subprocess
+
+IS_WINDOWS = platform.system() == "Windows"
+
+if IS_WINDOWS:
+    import ctypes
+    from ctypes import wintypes
 
 
 def copy_text(text: str) -> None:
+    if IS_WINDOWS:
+        _copy_text_windows(text)
+        return
+    _copy_text_linux(text)
+
+
+def _copy_text_windows(text: str) -> None:
     GMEM_MOVEABLE = 0x0002
     CF_UNICODETEXT = 13
 
@@ -49,3 +63,27 @@ def copy_text(text: str) -> None:
         h_global = None
     finally:
         user32.CloseClipboard()
+
+
+def _copy_text_linux(text: str) -> None:
+    if shutil.which("wl-copy"):
+        subprocess.run(["wl-copy", "--", text], check=True, timeout=5)
+        return
+
+    if shutil.which("xclip"):
+        proc = subprocess.Popen(["xclip", "-selection", "clipboard"], stdin=subprocess.PIPE)
+        proc.communicate(input=text.encode("utf-8"), timeout=5)
+        if proc.returncode:
+            raise RuntimeError(f"xclip exited with code {proc.returncode}")
+        return
+
+    if shutil.which("xsel"):
+        proc = subprocess.Popen(["xsel", "--clipboard", "--input"], stdin=subprocess.PIPE)
+        proc.communicate(input=text.encode("utf-8"), timeout=5)
+        if proc.returncode:
+            raise RuntimeError(f"xsel exited with code {proc.returncode}")
+        return
+
+    raise RuntimeError(
+        "No clipboard tool found. Install one of: wl-copy (wl-clipboard), xclip, xsel"
+    )
